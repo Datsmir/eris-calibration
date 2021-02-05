@@ -37,9 +37,9 @@ public:
     pppi(1) += ti[1];
     pppi(2) += ti[2];
 
-    residual[0] = pj(0) - pppi(0);
-    residual[1] = pj(1) - pppi(1);
-    residual[2] = pj(2) - pppi(2);
+    residual[0] = pppi(0) - pj(0);
+    residual[1] = pppi(1) - pj(1);
+    residual[2] = pppi(2) - pj(2);
     return true;
   }
 
@@ -50,10 +50,10 @@ private:
   const Eigen::Vector3d pj_;
 };
 
-class Solver
+class Solver2
 {
 public:
-  Solver(const Eigen::Vector4d& q_init, const Eigen::Vector3d t_init) : q_opt_(q_init), t_opt_(t_init)
+  Solver2(const Eigen::Vector4d& q_init, const Eigen::Vector3d t_init) : q_opt_(q_init), t_opt_(t_init)
   {
   }
 

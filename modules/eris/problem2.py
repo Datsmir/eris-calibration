@@ -1,4 +1,4 @@
-class Problem:
+class Problem2:
     def __init__(self, campoints=None, campoints_true = None, robposes=None):
         self._campoints = campoints
         self._robposes = robposes

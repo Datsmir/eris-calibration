@@ -2,7 +2,7 @@ import numpy as np
 
 import _eris
 
-from eris.problem2 import Problem
+from eris.problem2 import Problem2
 from eris.transformations import (
     quaternion_from_matrix,
     quaternion_matrix,
@@ -11,11 +11,11 @@ from eris.transformations import (
     random_vector,
 )
 
-class Solver:
+class Solver2:
     def __init__(self):
         pass
 
-    def _solve(self, problem: Problem, x=None):
+    def _solve(self, problem: Problem2, x=None):
         """
         Solve the given problem (starting from a 'random' initial guess if the optional argument is not provided).
         """
@@ -29,17 +29,14 @@ class Solver:
         campoints_true = problem.campoints_true
         robposes = problem.robposes
 
-        solver = _eris.Solver(q0, t0)
+        solver = _eris.Solver2(q0, t0)
 
-        for pose in robposes:
-            for i, points in enumerate(campoints):
-                Ti = pose
-                qi = np.roll(quaternion_from_matrix(Ti), 1)
-                ti = Ti[:3, 3]
-                pis = points
-                for i, pi in enumerate(pis):
-                    pj = campoints_true[i]
-                    solver.add_residual_block(qi, ti, pi, pj)
+        for i, pose in enumerate(robposes):
+            Ti = pose
+            qi = np.roll(quaternion_from_matrix(Ti), 1)
+            ti = Ti[:3, 3]
+            for pi, pj in zip(campoints[i], campoints_true):
+                solver.add_residual_block(qi, ti, pi, pj)
 
         qopt, topt = solver.solve()
         Xopt = quaternion_matrix(np.roll(qopt, -1))

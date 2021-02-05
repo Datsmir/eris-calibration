@@ -16,7 +16,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include <eris/solver.hpp>
+#include <eris/solver2.hpp>
 
 namespace py = pybind11;
 
