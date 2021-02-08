@@ -13,5 +13,5 @@
 # limitations under the License.
 
 import _eris
-from .problem import Problem
-from .solver import Solver
+from .sim_problem import Problem
+from .sim_solver import Solver
