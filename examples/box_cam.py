@@ -38,7 +38,11 @@ for point in P.T:
     true_point = T  @ point.T
     campoints_true.append(true_point[:-1])
 
-problem = eris.Problem2(campoints = campoints, campoints_true = campoints_true, robposes =robposes)
+campts_true = []
+for i in range(len(campoints)):
+    campts_true.append(campoints_true)
+
+problem = eris.Problem2(campoints = campoints, campoints_true = campts_true, robposes =robposes)
 solver = eris.Solver2()
 
 sol, summary = solver.calibrate_eye_in_hand(problem)
