@@ -16,7 +16,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include <eris/solver.hpp>
+#include <eris/simultaneous_solver.hpp>
 
 namespace py = pybind11;
 
@@ -74,11 +74,11 @@ PYBIND11_MODULE(_eris, m)
 {
   py::class_<ceres::Solver::Summary>(m, "Summary");
 
-  py::class_<eris::hand_eye_calibration::Solver>(m, "Solver")
+  py::class_<eris::hand_eye_calibration2::Solver>(m, "Solver")
       .def(py::init<const Eigen::Vector4d&, const Eigen::Vector3d&>())
-      .def("add_residual_block", &eris::hand_eye_calibration::Solver::AddResidualBlock)
-      .def("solve", &eris::hand_eye_calibration::Solver::Solve)
-      .def("summary", &eris::hand_eye_calibration::Solver::Summary);
+      .def("add_residual_block", &eris::hand_eye_calibration2::Solver::AddResidualBlock)
+      .def("solve", &eris::hand_eye_calibration2::Solver::Solve)
+      .def("summary", &eris::hand_eye_calibration2::Solver::Summary);
 
   m.def("summary_to_dict", &SummaryToDict);
 }
