@@ -35,7 +35,7 @@ class Solver2:
             Ti = pose
             qi = np.roll(quaternion_from_matrix(Ti), 1)
             ti = Ti[:3, 3]
-            for pi, pj in zip(campoints[i], campoints_true):
+            for pi, pj in zip(campoints[i], campoints_true[i]):
                 solver.add_residual_block(qi, ti, pi, pj)
 
         qopt, topt = solver.solve()
