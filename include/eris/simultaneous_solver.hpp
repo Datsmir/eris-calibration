@@ -10,21 +10,24 @@
 namespace eris::hand_eye_calibration2
 {
 class CostFunctor
-{       // poses i, j 
-    // cam1 : qi1, ti1, pi1 , qj1, tj1, pj1   cam2: qi2, ti2, pi2,  qj2. tj2, pj2
+{   
 public:
   CostFunctor(
       const Eigen::Vector4d& qi1, const Eigen::Vector3d& ti1, const Eigen::Vector3d& pi1, 
       const Eigen::Vector4d& qj1, const Eigen::Vector3d& tj1, const Eigen::Vector3d& pj1,
       const Eigen::Vector4d& qi2, const Eigen::Vector3d& ti2, const Eigen::Vector3d& pi2,
-      const Eigen::Vector4d& qj2, const Eigen::Vector3d& tj2, const Eigen::Vector3d& pj2,
+      const Eigen::Vector4d& qj2, const Eigen::Vector3d& tj2, const Eigen::Vector3d& pj2
       )
     : qi1_(qi1), ti1_(ti1), pi1_(pi1), qj1_(qj1), tj1_(tj1), pj1_(pj1), qi2_(qi2), ti2_(ti2), pi2_(pi2), qj2_(qj2), tj2_(tj2), pj2_(pj2)
   {
   }
 
   template <typename T>
-  auto operator()(const T* const qx, const T* const tx, const T* const qy, const T* const ty, T* residual) const -> bool
+  auto operator()(const T* const qx, 
+                  const T* const tx,
+                  const T* const qy,
+                  const T* const ty, 
+                  T* residual) const -> bool
   {
     Eigen::Matrix<T, 4, 1> qi1 = qi1_.cast<T>();
     Eigen::Matrix<T, 3, 1> ti1 = ti1_.cast<T>();
@@ -43,46 +46,46 @@ public:
     Eigen::Matrix<T, 3, 1> ppi1;
     Eigen::Matrix<T, 3, 1> pppi1;
     ceres::QuaternionRotatePoint(qx, pi1.data(), ppi1.data());
-    ppi(0) += tx[0];
-    ppi(1) += tx[1];
-    ppi(2) += tx[2];
+    ppi1(0) += tx[0];
+    ppi1(1) += tx[1];
+    ppi1(2) += tx[2];
     ceres::QuaternionRotatePoint(qi1.data(), ppi1.data(), pppi1.data());
-    pppi(0) += ti1[0];
-    pppi(1) += ti1[1];
-    pppi(2) += ti1[2];
+    pppi1(0) += ti1[0];
+    pppi1(1) += ti1[1];
+    pppi1(2) += ti1[2];
 
     Eigen::Matrix<T, 3, 1> ppj1;
     Eigen::Matrix<T, 3, 1> pppj1;
     ceres::QuaternionRotatePoint(qx, pj1.data(), ppj1.data());
-    ppj(0) += tx[0];
-    ppj(1) += tx[1];
-    ppj(2) += tx[2];
+    ppj1(0) += tx[0];
+    ppj1(1) += tx[1];
+    ppj1(2) += tx[2];
     ceres::QuaternionRotatePoint(qj1.data(), ppj1.data(), pppj1.data());
-    pppj(0) += tj1[0];
-    pppj(1) += tj1[1];
-    pppj(2) += tj1[2];
+    pppj1(0) += tj1[0];
+    pppj1(1) += tj1[1];
+    pppj1(2) += tj1[2];
 
     Eigen::Matrix<T, 3, 1> ppi2;
     Eigen::Matrix<T, 3, 1> pppi2;
     ceres::QuaternionRotatePoint(qy, pi2.data(), ppi2.data());
-    ppi(0) += ty[0];
-    ppi(1) += ty[1];
-    ppi(2) += ty[2];
+    ppi2(0) += ty[0];
+    ppi2(1) += ty[1];
+    ppi2(2) += ty[2];
     ceres::QuaternionRotatePoint(qi2.data(), ppi2.data(), pppi2.data());
-    pppi(0) += ti2[0];
-    pppi(1) += ti2[1];
-    pppi(2) += ti2[2];
+    pppi2(0) += ti2[0];
+    pppi2(1) += ti2[1];
+    pppi2(2) += ti2[2];
 
     Eigen::Matrix<T, 3, 1> ppj2;
     Eigen::Matrix<T, 3, 1> pppj2;
     ceres::QuaternionRotatePoint(qy, pj2.data(), ppj2.data());
-    ppj(0) += ty[0];
-    ppj(1) += ty[1];
-    ppj(2) += ty[2];
+    ppj2(0) += ty[0];
+    ppj2(1) += ty[1];
+    ppj2(2) += ty[2];
     ceres::QuaternionRotatePoint(qj2.data(), ppj2.data(), pppj2.data());
-    pppj(0) += tj2[0];
-    pppj(1) += tj2[1];
-    pppj(2) += tj2[2];
+    pppj2(0) += tj2[0];
+    pppj2(1) += tj2[1];
+    pppj2(2) += tj2[2];
 
     residual[0] = pppi1(0) + pppj1(0) + pppi2(0) + pppj2(0) ;
     residual[1] = pppi1(1) + pppj1(1) + pppi2(1) + pppj2(1) ;
@@ -109,7 +112,9 @@ private:
 class Solver
 {
 public:
-  Solver(const Eigen::Vector4d& qx_init, const Eigen::Vector3d tx_init), const Eigen::Vector4d& qy_init, const Eigen::Vector3d ty_init) : qx_opt_(qx_init), tx_opt_(tx_init), qy_opt_(qx_init), ty_opt_(tx_init)
+  Solver(const Eigen::Vector4d& qx_init, const Eigen::Vector3d tx_init, 
+         const Eigen::Vector4d& qy_init, const Eigen::Vector3d ty_init) 
+    : qx_opt_(qx_init), tx_opt_(tx_init),qy_opt_(qy_init), ty_opt_(ty_init)
   {
   }
 
@@ -129,11 +134,11 @@ private:
   ceres::Solver::Options options_;
   ceres::Solver::Summary summary_;
 
-  bool local_parameterization_is_set_ = false;
+  bool local_parameterization_is_set_ = true;
 
   Eigen::Vector4d qx_opt_;
   Eigen::Vector3d tx_opt_;
   Eigen::Vector4d qy_opt_;
   Eigen::Vector3d ty_opt_;
 };
-}  // namespace eris::hand_eye_calibration
+}  // namespace eris::hand_eye_calibration2
