@@ -15,3 +15,5 @@
 import _eris
 from .problem import Problem
 from .solver import Solver
+from .problem2 import Problem2
+from .solver2 import Solver2
