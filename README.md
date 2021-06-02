@@ -1,4 +1,4 @@
-# eris
+# Modified Eris
 Hand-eye calibration from point clouds
 
 ## Installation
@@ -21,6 +21,6 @@ cmake --build . --target install
 
 ### Clone and install
 ```bash
-git clone https://github.com/tingelst/eris-calibration.git
+git clone https://github.com/datsmir/eris-calibration.git
 pip3 install eris-calibration
 ```
